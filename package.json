@@ -1,0 +1,14 @@
+{
+  "name": "http2byond",
+  "version": "1.0.0",
+  "description": "Converts a url-compatible JSON form into a packet format usable to communicate with BYOND game servers.",
+  "main": "index.js",
+  "keywords": [
+    "byond"
+  ],
+  "author": "Tigercat2000",
+  "license": "MIT",
+  "dependencies": {
+    "jspack": "0.0.4"
+  }
+}
