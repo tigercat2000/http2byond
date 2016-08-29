@@ -1,6 +1,6 @@
 {
   "name": "http2byond",
-  "description": "Converts a url-compatible JSON form into a packet format usable to communicate with BYOND game servers.",
+  "description": "Communication layer between node.js and BYOND game servers.",
   "version": "1.0.0",
   "author": "Tigercat2000",
   "dependencies": {
