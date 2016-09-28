@@ -5,14 +5,6 @@ const net = require('net');
 const jspack = require('jspack');
 
 /**
- * Object used for http2byond settings.
- * @typedef {Object} infoForm
- * @property {string} ip - IP Address to communicate with.
- * @property {string} port - Port to use with the IP Address. Must match the port the game server is running on.
- * @property {string} topic - URL parameters to send to the gameserver. Must start with `?`.
- */
-
-/**
  * Callback required as the second argument to http2byond.
  *
  * @callback requestCallback
@@ -21,8 +13,11 @@ const jspack = require('jspack');
  */
 
 /**
- * Async communication with the BYOND server.
- * @param {infoForm} form - Settings object.
+ * Async communication with BYOND gameservers.
+ * @param {Object} form - Settings object.
+ * @param {string} form.ip - IP Address to communicate with.
+ * @param {string} form.port - Port to use with the IP Address. Must match the port the game server is running on.
+ * @param {string} form.topic - URL parameters to send to the gameserver. Must start with `?`.
  * @param {requestCallback} cb - Callback that handles the response.
  */
 module.exports = function (form, cb) {
@@ -33,48 +28,29 @@ module.exports = function (form, cb) {
 		}
 
 		// Converts a string to buffer-compatible hex data.
-		function string_to_hex (str) {
-			var newstr = "";
+		function string_to_charcodes (str) {
+			var retArray = []
 			for (var i = 0; i < str.length; i++) {
-				var charcode = str.charCodeAt(i);
-				newstr += charcode.toString(16);
+				retArray.push(str.charCodeAt(i));
 			}
-			return newstr;
-		}
-
-		// jspack returns an array of ascii values encoded in decimal. Have to convert them to hex for the buffer.
-		function sanitize_jspack (pack) {
-			var rarray = [];
-			for (var i = 0; i < pack.length; i++) {
-				var hexNum = pack[i].toString(16); // Convert number to hex.
-				if (hexNum.length < 2) {
-					// jspack does not pad decimal numbers, so we have to do it by hand for the packet bytes.
-					hexNum.length < 1 ? hexNum = "00" : hexNum += "0";
-				}
-				rarray.push(hexNum);
-			}
-			return rarray;
+			return retArray;
 		}
 
 		// Custom packet creation- BYOND expects special packets, this is based off /tg/'s PHP scripts containing a reverse engineered packet format.
-		// It's easier to make an array of 2-bit hex strings and convert it into a buffer later than make a dynamically sized buffer.
-		var query = ["00", "83"];
+		var query = [0x00, 0x83];
 
 		// Use an unsigned short for the "expected data length" portion of the packet.
 		var pack = jspack.jspack.Pack("H", [parameters.length + 6]);
-		query = query.concat(sanitize_jspack(pack));
+		query = query.concat(pack);
 
 		// Padding between header and actual data.
-		query = query.concat(["00", "00", "00", "00", "00"]);
-		// Convert data into hex and add it to the array
-		query.push(string_to_hex(parameters));
-		query.push("00");
-
-		// Now that all of the bits are nicely sorted in an array, scrunch them together in a big hex string for the buffer input.
-		query = query.join("");
+		query = query.concat([0x00, 0x00, 0x00, 0x00, 0x00]);
+		// Convert data into charcodes and add it to the array
+		query = query.concat(string_to_charcodes(parameters));
+		query.push(0x00);
 
 		// Convert our new hex string into an actual buffer.
-		var querybuff = Buffer.from(query, "hex");
+		var querybuff = Buffer.from(query);
 
 		/* Networking section */
 		/* Now that we have our data in a binary buffer, start sending and recieving data. */ 
