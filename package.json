@@ -1,7 +1,7 @@
 {
   "name": "http2byond",
   "description": "Communication layer between node.js and BYOND game servers.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Tigercat2000",
   "dependencies": {
     "jspack": "0.0.4"
