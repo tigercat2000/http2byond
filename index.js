@@ -72,6 +72,15 @@ module.exports = function (form, cb) {
 		// Add the event handler.
 		socket.on("timeout", tHandler);
 
+		// Error handler. If an error happens in the socket API, it'll be given back to us here.
+		var eHandler = function (err) {
+			cb(undefined, err);
+			socket.destroy();
+		};
+
+		// Add the error handler.
+		socket.on("error", eHandler);
+
 		// Establish the connection to the server.
 		socket.connect({
 			port: form.port,
