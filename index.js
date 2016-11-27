@@ -98,6 +98,10 @@ module.exports = function (form, cb) {
 
 			// Function decodes the returned data once it's fully assembled.
 			function decode_buffer(dbuff) {
+				if (!dbuff) {
+					cb(undefined, new Error("No data recieved."));
+					return null;
+				}
 				// Confirm the return packet is in the BYOND format.
 				if (dbuff[0] == 0x00 && dbuff[1] == 0x83) {
 					// Start parsing the output.
