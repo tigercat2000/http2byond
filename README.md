@@ -5,19 +5,24 @@ A communication layer between node.js and BYOND game servers.
 ### Installation
 `npm install --save http2byond`
 
-### [Documentation](https://tigercat2000.github.io/http2byond/module-http2byond.html)
+### [Documentation](https://tigercat2000.github.io/http2byond/http2byond.html)
 
 ### Example
 ```javascript
-var http2byond = require("http2byond");
+const http2byond = require("./index.js");
+let connection = new http2byond({
+	timeout: 2000
+});
+
 var form = {
 	ip: "localhost",
-	port: "1024",
-	topic:
-		"?status"
-}
-http2byond(form, function (body, err) {
-	if (err) throw err;
-	console.log("Server Status:", body);
+	port: "6666",
+	topic: "?status"
+};
+
+connection.run(form).then((body) => {
+	console.log(body);
+}, (err) => {
+	console.error("ERR", err);
 });
 ```
