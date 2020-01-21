@@ -117,7 +117,7 @@ class http2byond {
 							var unpackarray = [dbuff[5], dbuff[6], dbuff[7], dbuff[8]];
 							var unpackint = jspack.jspack.Unpack("f", unpackarray); // 4 possible bytes, add them up and unpack as a big-endian (network) float
 							return unpackint[0];
-						} else if (dbuff[4] = 0x06) { // ASCII String.
+						} else if (dbuff[4] == 0x06) { // ASCII String.
 							var unpackString = "";
 							var index = 5; // Buffer index to start searching from.
 
