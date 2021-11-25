@@ -31,7 +31,7 @@ class http2byond {
 	 * @param {string} form.ip - IP Address to communicate with.
 	 * @param {string} form.port - Port to use with the IP Address. Must match the port the game server is running on.
 	 * @param {string} form.topic - URL parameters to send to the gameserver. Must start with `?`.
-	 * @returns {Promise} Promise object represents the data or error recieved in return.
+	 * @returns {Promise} Promise object represents the data or error received in return.
 	 */
 	run(form) {
 		var self = this;
@@ -57,7 +57,7 @@ class http2byond {
 			var querybuff = Buffer.from(query);
 
 			/* Networking section */
-			/* Now that we have our data in a binary buffer, start sending and recieving data. */ 
+			/* Now that we have our data in a binary buffer, start sending and receiving data. */ 
 
 			// Uses a normal net.Socket to send the custom packets.
 			var socket = new net.Socket({
@@ -92,7 +92,7 @@ class http2byond {
 				family: 4 // Use IPv4.
 			});
 
-			socket.on("connect", function () { // Socket successfully opened to the server. Ready to send and recieve data.
+			socket.on("connect", function () { // Socket successfully opened to the server. Ready to send and receive data.
 				// The timeout handler will interfere later, as the game server never sends an END packet.
 				// So, we just wait for it to time out to ensure we have all the data.
 				socket.removeListener("timeout", tHandler);
@@ -103,7 +103,7 @@ class http2byond {
 				// Function decodes the returned data once it's fully assembled.
 				function decode_buffer(dbuff) {
 					if (!dbuff) {
-						reject(new Error("No data recieved."));
+						reject(new Error("No data received."));
 						return null;
 					}
 					// Confirm the return packet is in the BYOND format.
@@ -136,7 +136,7 @@ class http2byond {
 					}
 				}
 
-				// Recieve data in the form of a buffer.
+				// Receive data in the form of a buffer.
 				var assembledBuffer;
 				socket.on("data", function (rbuff) {
 					if (assembledBuffer) {
@@ -149,10 +149,10 @@ class http2byond {
 				// Since BYOND doesn't send END packets, wait for timeout before trying to parse the returned data.
 				socket.on("timeout", function () {
 					// Decode the assembled data.
-					var recieved_data = decode_buffer(assembledBuffer);
+					var received_data = decode_buffer(assembledBuffer);
 					// The catch will deal with any errors from decode_buffer, but it could fail without erroring, so, make sure there's any data first.
-					if (recieved_data) {
-						resolve(recieved_data);
+					if (received_data) {
+						resolve(received_data);
 					}
 
 					// Assume the socket is done sending data, and close the connection.
