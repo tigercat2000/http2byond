@@ -6,7 +6,7 @@ export interface SocketConfig {
   //Port to connect to
   port: number;
 }
-export type SingleRunConfiguration = SocketConfig & {
+export interface SingleRunConfiguration extends SocketConfig {
   //URL params to send to BYOND
   topic: string;
   //Time to wait before aborting connection
@@ -132,7 +132,7 @@ function _sendTopic(socket: Socket, _topic: string): Promise<TopicReturnType> {
   })
 }
 
-function sendTopic(config: SingleRunConfiguration): Promise<TopicReturnType> {
+export function sendTopic(config: SingleRunConfiguration): Promise<TopicReturnType> {
   const socket = createConnection({
     family: 4,
     host: config.host,
@@ -142,8 +142,8 @@ function sendTopic(config: SingleRunConfiguration): Promise<TopicReturnType> {
   return _sendTopic(socket, config.topic)
 }
 
-function createTopicConnection(config: SocketConfig): TopicConnection {
-  let socket = createConnection({
+export function createTopicConnection(config: SocketConfig): TopicConnection {
+  const socket = createConnection({
     family: 4,
     host: config.host,
     port: config.port
@@ -161,5 +161,3 @@ function createTopicConnection(config: SocketConfig): TopicConnection {
     }
   }
 }
-
-export { sendTopic, createTopicConnection }
