@@ -1,0 +1,27 @@
+name: Run typescript compiler
+on:
+  push:
+    branches-ignore:
+      # publish.yml will need to run the compiler anyways
+      - master
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        # All active LTS versions(12,14,16) + current(17)
+        node: [ 17, 16, 14, 12 ]
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v2
+        with:
+          # We don't really use anything requiring anything newer than this
+          node-version: ${{ matrix.node }}
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm run prepare
