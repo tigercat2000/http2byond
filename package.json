@@ -1,15 +1,34 @@
 {
   "name": "http2byond",
   "description": "Communication layer between node.js and BYOND game servers.",
-  "version": "2.0.1",
-  "author": "Tigercat2000",
-  "dependencies": {
-    "jspack": "0.0.4"
-  },
+  "version": "3.0.0",
+  "contributors": [
+    {
+      "name": "Tigercat2000",
+      "email": "nick.pilant2@gmail.com",
+      "url": "https://github.com/tigercat2000"
+    },
+    {
+      "name": "alexkar598",
+      "email": "25136265+alexkar598@users.noreply.github.com",
+      "url": "https://github.com/alexkar598"
+    }
+  ],
   "keywords": [
     "byond"
   ],
   "license": "MIT",
-  "main": "index.js",
-  "repository": "tigercat2000/http2byond"
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tigercat2000/http2byond"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "types": "typings/index.d.ts",
+  "devDependencies": {
+    "@types/node": "^17.0.22"
+  }
 }
