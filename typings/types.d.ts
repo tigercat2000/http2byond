@@ -1,10 +1,10 @@
 export interface SocketConfig {
     host: string;
     port: number;
+    timeout?: number;
 }
 export interface SingleRunConfiguration extends SocketConfig {
     topic: string;
-    timeout?: number;
 }
 export declare type TopicReturnType = string | number | null;
 export interface TopicConnection {
