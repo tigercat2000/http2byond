@@ -19,8 +19,8 @@ export function _sendTopic(socket: Socket, _topic: string): Promise<TopicReturnT
       }
     }
 
-    socket.once("error", errorHandler("Socket errored"))
-    socket.once("timeout", errorHandler("Connection timeout"))
+    socket.on("error", errorHandler("Socket errored"))
+    socket.on("timeout", errorHandler("Connection timeout"))
 
     let byte = 0
     //type(2) + length(2)
@@ -45,7 +45,7 @@ export function _sendTopic(socket: Socket, _topic: string): Promise<TopicReturnT
     }
 
 
-    socket.once("data", data => {
+    socket.on("data", data => {
       //Still waiting on a complete header
       if(byte < 4) {
         const copiedBytes = data.copy(headerBuffer)
