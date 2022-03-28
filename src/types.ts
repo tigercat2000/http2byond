@@ -3,13 +3,13 @@ export interface SocketConfig {
   host: string;
   //Port to connect to
   port: number;
+  //Time to wait before aborting connection
+  timeout?: number;
 }
 
 export interface SingleRunConfiguration extends SocketConfig {
   //URL params to send to BYOND
   topic: string;
-  //Time to wait before aborting connection
-  timeout?: number;
 }
 
 export type TopicReturnType = string | number | null

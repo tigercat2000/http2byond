@@ -10,6 +10,9 @@ export function _sendTopic(socket: Socket, _topic: string): Promise<TopicReturnT
                     _topic
 
   return new Promise((resolve, reject) => {
+    //Get rid of all listeners to prepare the socket to be reused
+    socket.removeAllListeners()
+
     function errorHandler(reason: string) {
       return function(originalError?: Error) {
         originalError ?
@@ -28,8 +31,6 @@ export function _sendTopic(socket: Socket, _topic: string): Promise<TopicReturnT
     let bodyBuffer: Buffer;
 
     function processResponse() {
-      //Get rid of all listeners to prepare the socket to be reused
-      socket.removeAllListeners()
       const type = bodyBuffer[0];
       switch (type) {
         case 0x00: {
@@ -109,7 +110,6 @@ export function _sendTopic(socket: Socket, _topic: string): Promise<TopicReturnT
       ptr += topicBuffer.length
       dataBuffer[ptr] = 0x00
 
-      console.log(dataBuffer)
       socket.write(dataBuffer)
     }
 
@@ -149,6 +149,7 @@ export function createTopicConnection(config: SocketConfig): TopicConnection {
     const next = queue.shift()
     if(!next) {
       busy = false
+      socket.setTimeout(0)
       return value
     }
     const [topic, resolve, reject] = next;
@@ -165,6 +166,7 @@ export function createTopicConnection(config: SocketConfig): TopicConnection {
       //Immediate
       if(!busy) {
         busy = true
+        socket.setTimeout(config.timeout ?? 10000)
         return _sendTopic(socket, topic).then(runNextTopic)
       }
 
